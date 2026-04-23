@@ -9,18 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link id="gfont-Inter" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"></head>
-<body data-palette="dark" data-density="spacious" data-type="sans" data-layout="mosaic" data-image-size="l" data-cc-id="cc-1" style="font-family: Inter; cursor: crosshair;">
-
-<!-- TWEAKMODE STATE -->
-<script>
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "palette": "dark",
-  "density": "cozy",
-  "type": "sans",
-  "layout": "mosaic",
-  "imageSize": "l"
-}/*EDITMODE-END*/;
-</script>
+<body data-palette="dark" data-density="spacious" data-type="sans" data-layout="mosaic" data-image-size="l">
 
 <header class="dm-header" id="top">
   <div class="dm-wordmark"><a href="#top" id="to-top">Designmatazz</a></div>
@@ -152,55 +141,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   </div>
 </footer>
 
-<!-- TWEAKS PANEL -->
-<div class="dm-tweaks open" id="tweaks">
-  <h5>Tweaks</h5>
-
-  <div class="dm-tweaks-row">
-    <label>Palette</label>
-    <div class="dm-tweaks-seg" data-key="palette">
-      <button data-val="light" aria-pressed="false">Light</button>
-      <button data-val="warm" aria-pressed="false">Warm</button>
-      <button data-val="dark" aria-pressed="true">Dark</button>
-    </div>
-  </div>
-
-  <div class="dm-tweaks-row">
-    <label>Type</label>
-    <div class="dm-tweaks-seg" data-key="type">
-      <button data-val="serif" aria-pressed="false">Serif</button>
-      <button data-val="sans" aria-pressed="true">Sans</button>
-      <button data-val="mono" aria-pressed="false">Mono</button>
-    </div>
-  </div>
-
-  <div class="dm-tweaks-row">
-    <label>Layout</label>
-    <div class="dm-tweaks-seg" data-key="layout">
-      <button data-val="mosaic" aria-pressed="true">Mosaic</button>
-      <button data-val="grid" aria-pressed="false">Grid</button>
-      <button data-val="editorial" aria-pressed="false">Editorial</button>
-    </div>
-  </div>
-
-  <div class="dm-tweaks-row">
-    <label>Density</label>
-    <div class="dm-tweaks-seg" data-key="density">
-      <button data-val="compact" aria-pressed="false">Compact</button>
-      <button data-val="cozy" aria-pressed="false">Cozy</button>
-      <button data-val="spacious" aria-pressed="true">Spacious</button>
-    </div>
-  </div>
-
-  <div class="dm-tweaks-row">
-    <label>Images</label>
-    <div class="dm-tweaks-seg" data-key="imageSize">
-      <button data-val="s" aria-pressed="false">Small</button>
-      <button data-val="m" aria-pressed="false">Medium</button>
-      <button data-val="l" aria-pressed="true">Large</button>
-    </div>
-  </div>
-</div>
+<!-- Tweaks panel removed for production -->
 
 <script src="posts.js?v=2"></script>
 <script>
@@ -308,56 +249,6 @@ document.getElementById('to-top')?.addEventListener('click', (e) => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
-/* -----------------------------------------------------------
-   Tweaks logic
-   ----------------------------------------------------------- */
-const bodyEl = document.body;
-const tweaks = { ...TWEAK_DEFAULTS };
-
-function applyTweaks() {
-  bodyEl.setAttribute('data-palette', tweaks.palette);
-  bodyEl.setAttribute('data-density', tweaks.density);
-  bodyEl.setAttribute('data-type', tweaks.type);
-  bodyEl.setAttribute('data-layout', tweaks.layout);
-  bodyEl.setAttribute('data-image-size', tweaks.imageSize);
-
-  // sync button pressed states
-  document.querySelectorAll('.dm-tweaks-seg').forEach(seg => {
-    const key = seg.getAttribute('data-key');
-    seg.querySelectorAll('button').forEach(btn => {
-      btn.setAttribute('aria-pressed', btn.getAttribute('data-val') === tweaks[key]);
-    });
-  });
-}
-applyTweaks();
-
-document.querySelectorAll('.dm-tweaks-seg').forEach(seg => {
-  const key = seg.getAttribute('data-key');
-  seg.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    const val = btn.getAttribute('data-val');
-    tweaks[key] = val;
-    applyTweaks();
-    // persist
-    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
-  });
-});
-
-/* -----------------------------------------------------------
-   Tweaks host protocol
-   ----------------------------------------------------------- */
-window.addEventListener('message', (e) => {
-  const msg = e.data;
-  if (!msg || typeof msg !== 'object') return;
-  if (msg.type === '__activate_edit_mode') {
-    document.getElementById('tweaks').classList.add('open');
-  } else if (msg.type === '__deactivate_edit_mode') {
-    document.getElementById('tweaks').classList.remove('open');
-  }
-});
-window.parent.postMessage({ type: '__edit_mode_available' }, '*');
 </script>
 
 
