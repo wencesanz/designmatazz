@@ -9,7 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link id="gfont-Inter" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"></head>
-<body data-palette="dark" data-density="spacious" data-type="sans" data-layout="mosaic" data-image-size="l">
+<body data-palette="dark" data-density="spacious" data-type="sans" data-layout="mosaic" data-image-size="l" data-cc-id="cc-1" style="font-family: Inter; cursor: crosshair;">
+
+<!-- TWEAKMODE STATE -->
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "dark",
+  "density": "cozy",
+  "type": "sans",
+  "layout": "mosaic",
+  "imageSize": "l"
+}/*EDITMODE-END*/;
+</script>
 
 <header class="dm-header" id="top">
   <div class="dm-wordmark"><a href="#top" id="to-top">Designmatazz</a></div>
@@ -89,9 +100,12 @@
     <a class="dm-pill" href="https://standard-format.co.uk/" target="_blank" rel="noopener">Standard Format</a>
   </div><div class="dm-images"><figure class="dm-fig"><img src="https://64.media.tumblr.com/0f14e4d2bb7356bde7fec9638b9c9f02/ce0717f873262c37-96/s500x750/ae83d085b00c8c804df7efa2e88141c389aade9c.jpg" loading="lazy" alt="Standard Format — image 1"><figcaption>Standard Format · Plate A</figcaption></figure><figure class="dm-fig"><img src="https://64.media.tumblr.com/71f06c9b2e73d99a15b71bbab0f22896/ce0717f873262c37-18/s500x750/2b6b74d9e7d2ae6b2d35ad021c2fdb6cefad84f9.jpg" loading="lazy" alt="Standard Format — image 2"><figcaption>Standard Format · Plate B</figcaption></figure><figure class="dm-fig"><img src="https://64.media.tumblr.com/b2225df44ab71bb2fc8237d8ff103471/ce0717f873262c37-ce/s500x750/bb2439cc984957ecb46528730ecb4e85c8b76f65.jpg" loading="lazy" alt="Standard Format — image 3"><figcaption>Standard Format · Plate C</figcaption></figure></div></article></main>
 
-<div class="dm-sentinel" id="sentinel" aria-hidden="true">
-  <span class="dm-sentinel-label" id="sentinel-label">Loading more…</span>
-</div>
+<!-- PAGINATION -->
+<nav class="dm-pagination" id="pagination" aria-hidden="true">
+  <button class="dm-page-btn" id="page-prev" disabled>← Previous</button>
+  <span class="dm-page-info" id="page-info">Page 01 / 01</span>
+  <button class="dm-page-btn" id="page-next">Next →</button>
+</nav>
 
 <!-- ARCHIVE -->
 <section class="dm-archive" id="archive">
@@ -138,9 +152,57 @@
   </div>
 </footer>
 
-<!-- TWEAKS PANEL REMOVED FOR PRODUCTION -->
+<!-- TWEAKS PANEL -->
+<div class="dm-tweaks open" id="tweaks">
+  <h5>Tweaks</h5>
 
-<script src="posts.js?v=3"></script>
+  <div class="dm-tweaks-row">
+    <label>Palette</label>
+    <div class="dm-tweaks-seg" data-key="palette">
+      <button data-val="light" aria-pressed="false">Light</button>
+      <button data-val="warm" aria-pressed="false">Warm</button>
+      <button data-val="dark" aria-pressed="true">Dark</button>
+    </div>
+  </div>
+
+  <div class="dm-tweaks-row">
+    <label>Type</label>
+    <div class="dm-tweaks-seg" data-key="type">
+      <button data-val="serif" aria-pressed="false">Serif</button>
+      <button data-val="sans" aria-pressed="true">Sans</button>
+      <button data-val="mono" aria-pressed="false">Mono</button>
+    </div>
+  </div>
+
+  <div class="dm-tweaks-row">
+    <label>Layout</label>
+    <div class="dm-tweaks-seg" data-key="layout">
+      <button data-val="mosaic" aria-pressed="true">Mosaic</button>
+      <button data-val="grid" aria-pressed="false">Grid</button>
+      <button data-val="editorial" aria-pressed="false">Editorial</button>
+    </div>
+  </div>
+
+  <div class="dm-tweaks-row">
+    <label>Density</label>
+    <div class="dm-tweaks-seg" data-key="density">
+      <button data-val="compact" aria-pressed="false">Compact</button>
+      <button data-val="cozy" aria-pressed="false">Cozy</button>
+      <button data-val="spacious" aria-pressed="true">Spacious</button>
+    </div>
+  </div>
+
+  <div class="dm-tweaks-row">
+    <label>Images</label>
+    <div class="dm-tweaks-seg" data-key="imageSize">
+      <button data-val="s" aria-pressed="false">Small</button>
+      <button data-val="m" aria-pressed="false">Medium</button>
+      <button data-val="l" aria-pressed="true">Large</button>
+    </div>
+  </div>
+</div>
+
+<script src="posts.js?v=2"></script>
 <script>
 /* -----------------------------------------------------------
    Render feed — waits for Tumblr fetch, then paints
@@ -200,40 +262,45 @@ function renderArchive(posts) {
   });
 }
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 10;
 let _allPosts = [];
-let _cursor = 0;
+let _page = 0;
 
-function renderNextPage() {
-  const slice = _allPosts.slice(_cursor, _cursor + PAGE_SIZE);
-  slice.forEach((p, j) => renderPost(p, _cursor + j));
-  _cursor += slice.length;
-  const label = document.getElementById('sentinel-label');
-  if (_cursor >= _allPosts.length && label) {
-    label.textContent = '— End of feed —';
-  }
+function totalPages() { return Math.max(1, Math.ceil(_allPosts.length / PAGE_SIZE)); }
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+function renderPage() {
+  feedEl.innerHTML = '';
+  const start = _page * PAGE_SIZE;
+  const slice = _allPosts.slice(start, start + PAGE_SIZE);
+  slice.forEach((p, j) => renderPost(p, start + j));
+
+  const info = document.getElementById('page-info');
+  const prev = document.getElementById('page-prev');
+  const next = document.getElementById('page-next');
+  if (info) info.textContent = `Page ${pad2(_page + 1)} / ${pad2(totalPages())}`;
+  if (prev) prev.disabled = _page === 0;
+  if (next) next.disabled = _page >= totalPages() - 1;
+
+  // Scroll to top of feed (smooth)
+  const feedTop = feedEl.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: Math.max(0, feedTop), behavior: 'smooth' });
 }
 
 (async () => {
   const posts = await (window.DM_POSTS_READY || Promise.resolve(window.DM_POSTS || []));
   _allPosts = posts;
-  feedEl.innerHTML = '';
   feedEl.removeAttribute('data-ssr');
-  renderNextPage();
+  renderPage();
   renderArchive(posts);
 
-  // Infinite scroll
-  const sentinel = document.getElementById('sentinel');
-  if (sentinel && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && _cursor < _allPosts.length) {
-          renderNextPage();
-        }
-      });
-    }, { rootMargin: '800px 0px' });
-    io.observe(sentinel);
-  }
+  document.getElementById('pagination')?.removeAttribute('aria-hidden');
+  document.getElementById('page-prev')?.addEventListener('click', () => {
+    if (_page > 0) { _page--; renderPage(); }
+  });
+  document.getElementById('page-next')?.addEventListener('click', () => {
+    if (_page < totalPages() - 1) { _page++; renderPage(); }
+  });
 })();
 
 // Smooth scroll to top on wordmark click
@@ -241,6 +308,56 @@ document.getElementById('to-top')?.addEventListener('click', (e) => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+/* -----------------------------------------------------------
+   Tweaks logic
+   ----------------------------------------------------------- */
+const bodyEl = document.body;
+const tweaks = { ...TWEAK_DEFAULTS };
+
+function applyTweaks() {
+  bodyEl.setAttribute('data-palette', tweaks.palette);
+  bodyEl.setAttribute('data-density', tweaks.density);
+  bodyEl.setAttribute('data-type', tweaks.type);
+  bodyEl.setAttribute('data-layout', tweaks.layout);
+  bodyEl.setAttribute('data-image-size', tweaks.imageSize);
+
+  // sync button pressed states
+  document.querySelectorAll('.dm-tweaks-seg').forEach(seg => {
+    const key = seg.getAttribute('data-key');
+    seg.querySelectorAll('button').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.getAttribute('data-val') === tweaks[key]);
+    });
+  });
+}
+applyTweaks();
+
+document.querySelectorAll('.dm-tweaks-seg').forEach(seg => {
+  const key = seg.getAttribute('data-key');
+  seg.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const val = btn.getAttribute('data-val');
+    tweaks[key] = val;
+    applyTweaks();
+    // persist
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  });
+});
+
+/* -----------------------------------------------------------
+   Tweaks host protocol
+   ----------------------------------------------------------- */
+window.addEventListener('message', (e) => {
+  const msg = e.data;
+  if (!msg || typeof msg !== 'object') return;
+  if (msg.type === '__activate_edit_mode') {
+    document.getElementById('tweaks').classList.add('open');
+  } else if (msg.type === '__deactivate_edit_mode') {
+    document.getElementById('tweaks').classList.remove('open');
+  }
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
 </script>
 
 
