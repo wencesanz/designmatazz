@@ -5,7 +5,7 @@
 
 (function () {
   const BLOG = "designmatazz.tumblr.com";
-  const API_KEY = "aIcXaN2dezgK6PtUSjcHbpoauxL42QgLfRksT6ciDUqSzvRwmb"; // public key, replace with your own
+  const API_KEY = "FeqLJGRSAnSWxvyhyLYX3JDW3hJPwRdLucaHVHJ2e8X8Syxg7s"; // public key, replace with your own
   const BATCH = 20;        // posts per request (max 20 for v2)
   const MAX_POSTS = 500;   // hard cap
 
