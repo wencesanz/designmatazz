@@ -36,8 +36,9 @@
     const d = new Date(p.date || p.timestamp * 1000);
     const date = isNaN(d) ? "" :
       d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    const year = isNaN(d) ? null : d.getFullYear();
 
-    return { date, name, url, images };
+    return { date, year, name, url, images };
   }
 
   async function fetchBatch(offset) {
