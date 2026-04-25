@@ -65,11 +65,24 @@
     return all;
   }
 
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
   // Expose a promise that index.html awaits.
   window.DM_POSTS_READY = (async () => {
     try {
       const posts = await fetchAll();
-      if (posts.length) { window.DM_POSTS = posts; return posts; }
+      if (posts.length) {
+        const randomised = shuffle(posts);
+        window.DM_POSTS = randomised;
+        return randomised;
+      }
     } catch (e) { console.warn("Tumblr API failed:", e); }
     window.DM_POSTS = window.DM_SEED;
     return window.DM_SEED;
