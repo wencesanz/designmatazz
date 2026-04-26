@@ -144,7 +144,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.02em;
   color: var(--ink-soft);
   text-transform: none;
-  max-width: 320px;
+  white-space: nowrap;
 }
 .dm-tag em { font-family: var(--serif); font-style: italic; color: var(--ink); }
 
