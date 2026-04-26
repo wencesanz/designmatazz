@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=15">
 <link id="gfont-Inter" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"></head>
 <body data-palette="dark" data-density="spacious" data-type="sans" data-layout="mosaic" data-image-size="l" data-cc-id="cc-1" style="font-family: Inter; cursor: crosshair;">
 
@@ -107,7 +107,6 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 <section class="dm-archive" id="archive">
   <div class="dm-archive-head">
     <h2 class="dm-archive-title">Archive</h2>
-    <p class="dm-archive-sub">Every studio featured, most recent first.</p>
   </div>
   <ol class="dm-archive-list" id="archive-list"></ol>
 </section>
@@ -198,13 +197,15 @@ function renderArchive(posts) {
   const list = document.getElementById('archive-list');
   if (!list) return;
   list.innerHTML = '';
-  posts.forEach((p, i) => {
+  const sorted = [...posts].sort((a, b) =>
+    a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+  );
+  sorted.forEach((p, i) => {
     const li = document.createElement('li');
     li.className = 'dm-archive-row';
     li.innerHTML = `
       <span class="dm-archive-num">${fmtIndex(i)}</span>
       <a class="dm-archive-name" href="${p.url}" target="_blank" rel="noopener">${p.name}</a>
-      <span class="dm-archive-date">${p.date}</span>
     `;
     list.appendChild(li);
   });

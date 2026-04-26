@@ -133,14 +133,14 @@ img { display: block; max-width: 100%; }
   font-family: var(--display-family);
   font-style: var(--display-style);
   font-weight: var(--display-weight);
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: clamp(36px, 4vw, 52px);
   letter-spacing: -0.01em;
   line-height: 1;
 }
 
 .dm-tag {
   font-family: var(--label-family);
-  font-size: 13.5px;
+  font-size: 18px;
   letter-spacing: 0.02em;
   color: var(--ink-soft);
   text-transform: none;
@@ -150,9 +150,9 @@ img { display: block; max-width: 100%; }
 
 .dm-nav {
   display: flex;
-  gap: 18px;
+  gap: 22px;
   font-family: var(--label-family);
-  font-size: 12px;
+  font-size: 18px;
   letter-spacing: 0.02em;
   color: var(--ink-soft);
 }
@@ -312,24 +312,14 @@ img { display: block; max-width: 100%; }
 }
 [data-palette="dark"] .dm-pill { color: #ffffff; border-color: #ffffff; }
 [data-palette="dark"] .dm-pill:hover { background: #ffffff; color: var(--bg); border-color: #ffffff; }
-.dm-pill::after {
-  content: "↗";
-  font-family: var(--label-family);
-  font-style: normal;
-  font-size: 11px;
-  opacity: 0.55;
-  transition: transform 180ms ease, opacity 180ms ease;
-}
+.dm-pill::after { content: none; }
 .dm-pill:hover {
   background: var(--ink);
   color: var(--bg);
   filter: blur(0.6px);
   letter-spacing: 0.04em;
 }
-.dm-pill:hover::after {
-  opacity: 1;
-  transform: translate(1px, -1px);
-}
+.dm-pill:hover::after { content: none; }
 
 /* ------------------------------------------------------------------
    Mosaic layout — asymmetric like Cubitts
@@ -525,18 +515,18 @@ img { display: block; max-width: 100%; }
   padding: 48px var(--pad-x) 64px;
   border-top: 1px solid var(--line);
   font-family: var(--label-family);
-  font-size: 12px;
+  font-size: 18px;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
 .dm-page-btn {
   font-family: var(--label-family);
-  font-size: 12px;
+  font-size: 18px;
   letter-spacing: 0.04em;
   color: var(--ink);
   background: transparent;
   border: 1px solid var(--line);
-  padding: 12px 20px;
+  padding: 16px 28px;
   border-radius: 999px;
   cursor: pointer;
   transition: background 240ms ease, color 240ms ease, border-color 240ms ease;
@@ -559,7 +549,7 @@ img { display: block; max-width: 100%; }
   align-items: center;
   gap: 10px;
   font-family: var(--label-family);
-  font-size: 11.5px;
+  font-size: 17px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -569,7 +559,7 @@ img { display: block; max-width: 100%; }
 }
 .dm-page-size select {
   font-family: var(--label-family);
-  font-size: 11.5px;
+  font-size: 17px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
@@ -737,7 +727,7 @@ img { display: block; max-width: 100%; }
   font-family: var(--display-family);
   font-style: var(--display-style);
   font-weight: var(--display-weight);
-  font-size: clamp(40px, 6vw, 84px);
+  font-size: clamp(28px, 3.6vw, 48px);
   line-height: 1;
   letter-spacing: -0.02em;
   margin: 0;
@@ -758,7 +748,7 @@ img { display: block; max-width: 100%; }
 }
 .dm-archive-row {
   display: grid;
-  grid-template-columns: 64px 1fr auto;
+  grid-template-columns: 64px 1fr;
   align-items: baseline;
   gap: 24px;
   padding: 18px 0;
@@ -772,10 +762,11 @@ img { display: block; max-width: 100%; }
 }
 .dm-archive-num {
   font-variant-numeric: tabular-nums;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
 }
+[data-palette="dark"] .dm-archive-num { color: #ffffff; }
 .dm-archive-name {
   font-family: var(--display-family);
   font-style: var(--display-style);
